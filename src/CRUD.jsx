@@ -13,6 +13,10 @@ const CRUD=()=>{
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const [show2, setShow2] = useState(false);
+    const handleClose2 = () => setShow2(false);
+    const handleShow2 = () => setShow2(true);
+
     const[Title, setTitle]=useState("")
     const[Author, setAuthor]=useState("")
     const[Year, setYear]=useState("")
@@ -25,6 +29,13 @@ const CRUD=()=>{
     const[editDescription, setEditDescription]=useState("")
     const[editInStock, setEditInStock]=useState("")
     const[editId, setEditId]=useState("")
+
+    const[detailTitle, setDetailsTitle]=useState("")
+    const[detailAuthor, setDetailsAuthor]=useState("")
+    const[detailYear, setDetailsYear]=useState("")
+    const[detailDescription, setDetailsDescription]=useState("")
+    const[detailInStock, setDetailsInStock]=useState("")
+    const[detailId, setDetailsId]=useState("")
 
     const bookData=[{
         Id:1,
@@ -121,6 +132,22 @@ const CRUD=()=>{
         })
     }
 
+    const handleDetails=(id)=>{
+        handleShow2();
+        axios.get(`https://localhost:7009/api/books/${id}`)
+        .then((result)=>{
+            setDetailsTitle(result.data.title)
+            setDetailsAuthor(result.data.author)
+            setDetailsYear(result.data.year)
+            setDetailsDescription(result.data.description)
+            setDetailsInStock(result.data.inStock)
+            setDetailsId(id)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+    }
+
     const clear = () =>{
         setTitle("");
         setAuthor("");
@@ -132,6 +159,12 @@ const CRUD=()=>{
         setEditYear("");
         setEditDescription("");
         setEditInStock("")
+        setDetailsTitle("")
+        setDetailsAuthor("")
+        setDetailsYear("")
+        setDetailsDescription("")
+        setDetailsInStock("")
+        setDetailsId("")
     }
 
     return(
@@ -183,6 +216,7 @@ const CRUD=()=>{
                                     <td>{item.description}</td>
                                     <td>{item.inStock}</td>
                                     <td colSpan={2}>
+                                        <button className="btn btn-warning" onClick={()=>handleDetails(item.id)}>Details</button>
                                         <button className="btn btn-primary" onClick={()=>handleEdit(item.id)}>Edit</button>
                                         <button className="btn btn-danger" onClick={()=>handleDelete(item.id)}>Delete</button>
                                     </td>
@@ -224,6 +258,27 @@ const CRUD=()=>{
                     </Button>
                     <Button variant="primary" onClick={handleUpdate}>
                         Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={show2} onHide={handleClose2}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Details Book</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Row>
+                        <td className="text-justify"><span className="fs-5">ID: </span>{detailId}</td>
+                        <td className="text-justify"><span className="fs-5">Title: </span>{detailTitle}</td>
+                        <td className="text-justify"><span className="fs-5">AUTHOR: </span>{detailAuthor}</td>
+                        <td className="text-justify"><span className="fs-5">YEAR: </span>{detailYear}</td>
+                        <td className="text-justify"><span className="fs-5">DESCRIPTION: </span>{detailDescription}</td>
+                        <td className="text-justify"><span className="fs-5">INSTOCK: </span>{detailInStock}</td>
+                    </Row>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleClose2}>
+                        Close
                     </Button>
                 </Modal.Footer>
             </Modal>
